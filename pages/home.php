@@ -29,7 +29,6 @@ render_header([
 
 		<section class="box special features">
 
-<button onclick="<? $lang = "ru"?>" >ru</button>
 
 <?php
 build_features();
