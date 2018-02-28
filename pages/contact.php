@@ -1,4 +1,48 @@
 <?php
+
+
+// echo '<pre>';
+// var_dump($_POST);
+// echo '</pre>';
+if ($_POST){
+
+$name = (string) trim($_POST['name']);
+$email = (string) trim($_POST['email']);
+$subject = (string) trim($_POST['subject']);
+$message = trim($_POST['message']);
+
+if(empty($name) OR empty($email) OR empty($subject) OR empty($message))
+{
+	$warning = '<br> Пожалуйста, заполните все поля!';
+}
+elseif(mb_strlen($name) > 250 OR mb_strlen($email) > 250)
+{
+	$warning = '<br> Слишком длинное имя или email';
+}
+elseif(filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE)
+{
+	$warning = '<br> Введите правильный email';
+}
+elseif(mb_strlen($subject) > 500)
+{
+	$warning = '<br> Слишком длинная тема сообщения';
+}
+else
+{
+
+$sql = "
+    INSERT INTO `messages`
+    (`name`,`email`,`subject`,`message_text`)
+    VALUES ('{$name}', '{$email}', '{$subject}', '{$message}')
+    ";
+    mysqli_query($db, $sql);
+}
+
+
+}
+
+
+
 render_header([
 	'title' => 'Contact Us',
 	'is_home' => false,
@@ -10,6 +54,12 @@ render_header([
 	<header>
 		<h2>Contact Us</h2>
 		<p>Tell us what you think about our little operation.</p>
+		
+
+		<?php if (!empty($warning)){
+	echo $warning;
+}
+?>
 	</header>
 	<div class="box">
 		<form method="post" action="#">
